@@ -1,0 +1,11 @@
+# Configuration of 2 CentOS machines to test HA configuration.
+# Marcelo Garcia (marcelomgarcia@gmail.com)
+
+- hosts: all
+  # Privilege escalation
+  become: true
+  become_method: sudo
+  # Disable selinux
+  -name: disable SElinux.
+  selinux:
+    state: disabled
