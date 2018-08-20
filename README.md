@@ -34,3 +34,15 @@ We test by booting the machines and trying to ping each other:
     (...)
 
 To force the re-sync of the shared folder use `vagrant reload` or `vagrant up`. The first option, `reload` is in fact a reboot of the virtual machines.
+
+## Ansible Playbook
+
+When dealing with a multi-machine, the configuration is from the outside to the inside, or *outside-in* as define in the documentation. This means, the current playbook definition is global, that is apply to both machines.
+
+    config.vm.define "flik", primary: true  do |flik|
+    (...)
+    config.vm.define "atta" do |atta|
+    (...)
+    config.vm.provision "ansible_local" do |ansible|
+    (...)
+
