@@ -16,6 +16,7 @@
       - redhat-lsb
       - vim
       - curl 
+  # TODO: create/add lines to /etc/hosts via templates.
   - name: Add flik to /etc/hosts.
     lineinfile: 
       path: /etc/hosts
