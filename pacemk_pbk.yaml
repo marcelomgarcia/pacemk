@@ -10,12 +10,15 @@
   - name: disable SElinux.
     selinux:
       state: disabled
-  - name: Install basic packages.
+  - name: Extra packages including corosync and pacemaker.
     action: yum name={{ item }} state=present update_cache=yes
     with_items: 
       - redhat-lsb
       - vim
       - curl 
+      - pacemaker 
+      - pcs
+      - resource-agents
   # TODO: create/add lines to /etc/hosts via templates.
   - name: Add flik to /etc/hosts.
     lineinfile: 
@@ -32,4 +35,4 @@
       line: '192.168.50.11   atta'
       owner: root
       group: root
-      mode: 0644      
+      mode: 0644

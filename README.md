@@ -1,6 +1,6 @@
 # Testing pacemaker/corosync
 
-The idea is to test a pacemaker/corosync using Vagrant and Ansible.
+The idea is to test a pacemaker/corosync using Vagrant and Ansible. I will be using the guide from [Cluster labs quickstart ](https://clusterlabs.org/quickstart-redhat.html)
 
 ## Vagrant file
 
