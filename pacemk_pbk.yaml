@@ -1,7 +1,7 @@
 # Configuration of 2 CentOS machines to test HA configuration.
 # Marcelo Garcia (marcelomgarcia@gmail.com)
 
-- hosts: all
+- hosts: nodes
   # Privilege escalation
   become: true
   become_method: sudo
