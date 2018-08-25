@@ -11,22 +11,28 @@ Vagrant.configure("2") do |config|
   end
 
   # Define the first server. This will be the master of pcs cluster.
-  config.vm.define "flik", primary: true  do |flik|
-    flik.vm.hostname = "flik"
-    flik.vm.network "private_network", ip: "192.168.50.10"
+  config.vm.define "flik", primary: true  do |machine|
+    machine.vm.hostname = "flik"
+    machine.vm.network "private_network", ip: "192.168.50.10"
   end
 
   # Define the second server. This will be the slave of pcs cluster.
-  config.vm.define "atta" do |atta|
-    atta.vm.hostname = "atta"
-    atta.vm.network "private_network", ip: "192.168.50.11"
+  config.vm.define "atta" do |machine|
+    machine.vm.hostname = "atta"
+    machine.vm.network "private_network", ip: "192.168.50.11"
   end
 
-  # Run Ansible play. 
-  # Note this play runs before the definition of the vm's. 
-  config.vm.provision "ansible_local" do |ansible|
-    ansible.playbook = "pacemk_pbk.yaml"
+  # Create a "controller" where we will install Ansible and from where we'll 
+  # install the software of the two other machines.
+  config.vm.define 'controller' do |machine|
+    machine.vm.network "private_network", ip: "192.168.50.13"
+    machine.vm.provision :ansible_local do |ansible|
+      ansible.playbook = "pacemk_pbk.yaml"
+      ansible.verbose = "true"
+      ansible.install = "true"
+      ansible.limit = "all"
+      ansible.inventory_path = "inventory"
+    end
   end
-
 end
  
