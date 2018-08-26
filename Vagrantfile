@@ -27,7 +27,8 @@ Vagrant.configure("2") do |config|
 
   # Create a "controller" where we will install Ansible and from where we'll 
   # install the software of the two other machines.
-  config.vm.define 'controller', primary: true  do |machine|
+  config.vm.define 'hopper', primary: true  do |machine|
+    machine.vm.hostname = "hopper"
     machine.vm.network "private_network", ip: "192.168.50.13"
     machine.vm.provision :ansible_local do |ansible|
       ansible.playbook = "pacemk_pbk.yaml"
