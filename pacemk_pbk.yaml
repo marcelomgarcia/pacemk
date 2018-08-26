@@ -37,7 +37,11 @@
       group: root
       mode: 0644
   # start the services
-  - name: Start pcs and corosync daemons.
+  - name: Start pcsd service.
     service:
-      name: pcs
+      name: pcsd
+      state: started
+  - name: Enable pcsd service. 
+    service:
+      name: pcsd
       enabled: yes
