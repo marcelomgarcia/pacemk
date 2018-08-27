@@ -1,21 +1,24 @@
 # Testing pacemaker/corosync
 
-The idea is to test a pacemaker/corosync using Vagrant and Ansible. I will be using the guide from [Cluster labs quickstart ](https://clusterlabs.org/quickstart-redhat.html)
+The idea is to test a pacemaker/corosync using Vagrant and Ansible. I will be using the guide from Cluster labs [quickstart](https://clusterlabs.org/quickstart-redhat.html)
 
 ## Vagrant file
 
-The `Vagrantfile` defines two VM: `flik` and `atta`:
+The `Vagrantfile` defines three VMs: `flik`, `atta`, and `hopper`:
 
-    config.vm.define "flik", primary: true  do |flik|
+    config.vm.define "flik" do |machine|
     (...)
-    config.vm.define "atta" do |atta|
+    config.vm.define "atta" do |machine|
+    (...)
+    config.vm.define 'hopper', primary: true  do |machine|
 
-The definition of `flik` has an extra clausule that defines this machine as the *primary*. That is this will be *default* machine in a multi machine environment.
+The definition of `hopper` has an extra clausule that defines this machine as the *primary*. That is this will be *default* machine in a multi machine environment. Ansible will be installed on this machine, and it will controll the other two.
 
 We also define the private address for each machine so they can communicate between them. The definition is:
 
-    flik.vm.network "private_network", ip: "192.168.50.10"
-    atta.vm.network "private_network", ip: "192.168.50.11"
+    machine.vm.network "private_network", ip: "192.168.50.10"
+    machine.vm.network "private_network", ip: "192.168.50.11"
+    machine.vm.network "private_network", ip: "192.168.50.13"
 
 We test by booting the machines and trying to ping each other:
 
@@ -45,4 +48,3 @@ When dealing with a multi-machine, the configuration is from the outside to the 
     (...)
     config.vm.provision "ansible_local" do |ansible|
     (...)
-
