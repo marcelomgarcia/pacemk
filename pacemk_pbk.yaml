@@ -45,21 +45,47 @@
     service:
       name: pcsd
       enabled: yes
-  # Creating ssh keys for root.
-  - name: Generating ssh keys for root.
-    command: ssh-keygen -t rsa -f /root/.ssh/id_rsa -N ''
-    args: 
-      creates: /root/.ssh/id_rsa
-    become: yes
-  # TODO. Find a way to create the authorized_keys so they can ssh
-  # to each other without password. END TODO.
+  # Create the '/root/.ssh' directory.
+  - name: Create root's ssh directory.
+    file: 
+      path: /root/.ssh
+      state: directory
+      mode: 0700
+  # Import 'ssh' keys
+  - name: Copy ssh authorized_keys file.
+    copy:
+      src: files/ssh_keys/authorized_keys
+      dest: /root/.ssh/
+      owner: root
+      group: root
+      mode: 0644
+  - name: Copy private key.
+    copy:
+      src: files/ssh_keys/id_rsa
+      dest: /root/.ssh/
+      owner: root
+      group: root
+      mode: 0600
+  - name: Copy public key.
+    copy:
+      src: files/ssh_keys/id_rsa.pub
+      dest: /root/.ssh/
+      owner: root
+      group: root
+      mode: 0644
+  - name: Copy ssh config file to root's ssh dir.
+    copy:
+      src: files/ssh_keys/config
+      dest: /root/.ssh/
+      owner: root
+      group: root
+      mode: 0400
   # Authorization for 'pcs'.
   - name: Pcs authorization.
-    command: echo CHANGEME | passwd --stdin hacluster
-    become: yes
-    become_method: su
+    shell: echo CHANGEME | passwd --stdin hacluster
 - hosts: flik
   become: yes
+  become_method: sudo
   tasks: 
-  - name: Finishing authorization for 'pcs'.
-    command: pcs cluster auth flik atta -u hacluster -p CHANGEME --force
+  - name: Authentication for 'pcs'.
+    shell: pcs cluster auth flik atta -u hacluster -p CHANGEME --force

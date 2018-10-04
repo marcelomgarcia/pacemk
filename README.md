@@ -51,3 +51,12 @@ And on the inventory file we point to the
 
     flik ansib(...)be_ssh_private_key_file=/vagrant/.vmulti/machines/...
 
+### SSH keys
+
+Setting the [ssh keys](https://www.rittmanmead.com/blog/2014/12/linux-cluster-sysadmin-ssh-keys/) for the _root_ user with Ansible module `copy`.
+
+    mgarcia@mercury:~/Work/pacemk/files$ mkdir ssh_keys  
+    mgarcia@mercury:~/Work/pacemk/files/ssh_keys$ KEYS_DIR=`pwd`                    
+    mgarcia@mercury:~/Work/pacemk/files/ssh_keys$ ssh-keygen -f ${KEYS_DIR}/id_rsa -q -N ""     
+    mgarcia@mercury:~/Work/pacemk/files/ssh_keys$ cp id_rsa.pub authorized_keys
+
