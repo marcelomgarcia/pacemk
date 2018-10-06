@@ -36,6 +36,14 @@
       owner: root
       group: root
       mode: 0644
+  # Copy the configuration file.
+  - name: Copy 'corosync.conf' file.
+    copy:
+      src: files/corosync.conf
+      dest: /etc/corosync/
+      owner: root
+      group: root
+      mode: 0644
   # start the services
   - name: Start pcsd service.
     service:
