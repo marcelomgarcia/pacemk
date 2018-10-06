@@ -89,3 +89,5 @@
   tasks: 
   - name: Authentication for 'pcs'.
     shell: pcs cluster auth flik atta -u hacluster -p CHANGEME --force
+  - name: Start the cluster
+    shell: pcs cluster start --all

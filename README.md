@@ -60,3 +60,12 @@ Setting the [ssh keys](https://www.rittmanmead.com/blog/2014/12/linux-cluster-sy
     mgarcia@mercury:~/Work/pacemk/files/ssh_keys$ ssh-keygen -f ${KEYS_DIR}/id_rsa -q -N ""     
     mgarcia@mercury:~/Work/pacemk/files/ssh_keys$ cp id_rsa.pub authorized_keys
 
+Then on the Ansible playbook they are copied to the `.ssh` directory in the home of the _root_
+
+    - name: Copy ssh config file to root's ssh dir.
+        copy:
+        src: files/ssh_keys/config
+        dest: /root/.ssh/
+        owner: root
+        group: root
+        mode: 0400
