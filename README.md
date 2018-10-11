@@ -69,3 +69,7 @@ Then on the Ansible playbook they are copied to the `.ssh` directory in the home
         owner: root
         group: root
         mode: 0400
+
+### Shell commands
+
+The `pcs` commands are executed with the _shell_ module, and they always return as "changed" so maybe it's a good idea to register the variable and print the output.
