@@ -44,7 +44,7 @@ To force the re-sync of the shared folder use `vagrant reload` or `vagrant up`. 
 
 We define a inventory file with the path to ssh key and host group definition. There is a complication that the default place for machine definition, the `.vagrant` directory, is not exported by default. Therefore is necessary to use other location. In the case of this project, the new folder is exported (as environment variable) before starting vagrant:
 
-    export VAGRANT_DOTFILE_PATH=/home/mgarcia/Work/pacemk/.vmulti
+    export VAGRANT_DOTFILE_PATH=${HOME}/Work/pacemk/.vmulti
     vagrant up
 
 And on the inventory file we point to the
@@ -69,3 +69,5 @@ Then on the Ansible playbook they are copied to the `.ssh` directory in the home
         owner: root
         group: root
         mode: 0400
+
+Sometimes the service don't start on the cluster. The problem seems to be with the `flik` node. 
