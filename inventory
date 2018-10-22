@@ -1,6 +1,11 @@
 controller ansible_connection=local
+<<<<<<< HEAD
+flik ansible_ssh_host=192.168.50.10 ansible_ssh_private_key_file=/vagrant/.vagrant_multi/machines/flik/virtualbox/private_key
+atta ansible_ssh_host=192.168.50.11 ansible_ssh_private_key_file=/vagrant/.vagrant_multi/machines/atta/virtualbox/private_key
+=======
 flik ansible_ssh_host=192.168.50.10 ansible_ssh_private_key_file=/vagrant/.vmulti/machines/flik/virtualbox/private_key
 atta ansible_ssh_host=192.168.50.11 ansible_ssh_private_key_file=/vagrant/.vmulti/machines/atta/virtualbox/private_key
+>>>>>>> 674f9e1c21fb45b4c3dbf65ddfa6ba205411ce5b
 
 [nodes]
 atta
