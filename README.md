@@ -56,8 +56,8 @@ And on the inventory file we point to the
 Setting the [ssh keys](https://www.rittmanmead.com/blog/2014/12/linux-cluster-sysadmin-ssh-keys/) for the _root_ user with Ansible module `copy`.
 
     mgarcia@mercury:~/Work/pacemk/files$ mkdir ssh_keys  
-    mgarcia@mercury:~/Work/pacemk/files/ssh_keys$ KEYS_DIR=`pwd`                    
-    mgarcia@mercury:~/Work/pacemk/files/ssh_keys$ ssh-keygen -f ${KEYS_DIR}/id_rsa -q -N ""     
+    mgarcia@mercury:~/Work/pacemk/files/ssh_keys$ KEYS_DIR=`pwd`
+    mgarcia@mercury:~/Work/pacemk/files/ssh_keys$ ssh-keygen -f ${KEYS_DIR}/id_rsa -q -N ""
     mgarcia@mercury:~/Work/pacemk/files/ssh_keys$ cp id_rsa.pub authorized_keys
 
 Then on the Ansible playbook they are copied to the `.ssh` directory in the home of the _root_
@@ -70,10 +70,9 @@ Then on the Ansible playbook they are copied to the `.ssh` directory in the home
         group: root
         mode: 0400
 
-<<<<<<< HEAD
-Sometimes the service don't start on the cluster. The problem seems to be with the `flik` node. 
-=======
+Sometimes the service don't start on the cluster. The problem seems to be with the `flik` node.
+
 ### Shell commands
 
 The `pcs` commands are executed with the _shell_ module, and they always return as "changed" so maybe it's a good idea to register the variable and print the output.
->>>>>>> 41172c4eb4a2557808d7557faa141040bdbb6e6d
+
