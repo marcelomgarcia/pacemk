@@ -9,7 +9,11 @@
 acceptance_config.yml
 boxes/*
 /.vagrant
+<<<<<<< HEAD
+/.vagrant_multi
+=======
 /.vmulti
+>>>>>>> 674f9e1c21fb45b4c3dbf65ddfa6ba205411ce5b
 /website/.vagrant
 /website/build
 /vagrant-spec.config.rb

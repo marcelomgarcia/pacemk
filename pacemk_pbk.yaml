@@ -36,6 +36,14 @@
       owner: root
       group: root
       mode: 0644
+  # Copy the configuration file.
+  - name: Copy 'corosync.conf' file.
+    copy:
+      src: files/corosync.conf
+      dest: /etc/corosync/
+      owner: root
+      group: root
+      mode: 0644
   # start the services
   - name: Start pcsd service.
     service:
@@ -45,3 +53,54 @@
     service:
       name: pcsd
       enabled: yes
+  # Create the '/root/.ssh' directory.
+  - name: Create root's ssh directory.
+    file: 
+      path: /root/.ssh
+      state: directory
+      mode: 0700
+  # Import 'ssh' keys
+  - name: Copy ssh authorized_keys file.
+    copy:
+      src: files/ssh_keys/authorized_keys
+      dest: /root/.ssh/
+      owner: root
+      group: root
+      mode: 0644
+  - name: Copy private key.
+    copy:
+      src: files/ssh_keys/id_rsa
+      dest: /root/.ssh/
+      owner: root
+      group: root
+      mode: 0600
+  - name: Copy public key.
+    copy:
+      src: files/ssh_keys/id_rsa.pub
+      dest: /root/.ssh/
+      owner: root
+      group: root
+      mode: 0644
+  - name: Copy ssh config file to root's ssh dir.
+    copy:
+      src: files/ssh_keys/config
+      dest: /root/.ssh/
+      owner: root
+      group: root
+      mode: 0400
+  # Authorization for 'pcs'.
+  - name: Pcs authorization.
+    shell: echo CHANGEME | passwd --stdin hacluster
+- hosts: flik
+  become: yes
+  become_method: sudo
+  tasks: 
+  - name: Authentication for 'pcs'.
+    shell: pcs cluster auth flik atta -u hacluster -p CHANGEME --force
+  - name: Start the cluster on atta
+    shell: pcs cluster start atta
+  - name: Pause for 2 minutes to see if the service starts
+    pause:
+      minutes: 2
+  - name: Start the cluster on flik
+    shell: pcs cluster start

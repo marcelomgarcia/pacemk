@@ -32,8 +32,6 @@ Vagrant.configure("2") do |config|
     machine.vm.network "private_network", ip: "192.168.50.13"
     machine.vm.provision :ansible_local do |ansible|
       ansible.playbook = "pacemk_pbk.yaml"
-      ansible.verbose = "false"
-      ansible.install = "true"
       ansible.limit = "all"
       ansible.inventory_path = "inventory"
     end

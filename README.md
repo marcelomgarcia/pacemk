@@ -38,13 +38,41 @@ We test by booting the machines and trying to ping each other:
 
 To force the re-sync of the shared folder use `vagrant reload` or `vagrant up`. The first option, `reload` is in fact a reboot of the virtual machines.
 
-## Ansible Playbook
+## Ansible
 
-When dealing with a multi-machine, the configuration is from the outside to the inside, or *outside-in* as define in the documentation. This means, the current playbook definition is global, that is apply to both machines.
+### Inventory
 
-    config.vm.define "flik", primary: true  do |flik|
-    (...)
-    config.vm.define "atta" do |atta|
-    (...)
-    config.vm.provision "ansible_local" do |ansible|
-    (...)
+We define a inventory file with the path to ssh key and host group definition. There is a complication that the default place for machine definition, the `.vagrant` directory, is not exported by default. Therefore is necessary to use other location. In the case of this project, the new folder is exported (as environment variable) before starting vagrant:
+
+    export VAGRANT_DOTFILE_PATH=${HOME}/Work/pacemk/.vmulti
+    vagrant up
+
+And on the inventory file we point to the
+
+    flik ansib(...)be_ssh_private_key_file=/vagrant/.vmulti/machines/...
+
+### SSH keys
+
+Setting the [ssh keys](https://www.rittmanmead.com/blog/2014/12/linux-cluster-sysadmin-ssh-keys/) for the _root_ user with Ansible module `copy`.
+
+    mgarcia@mercury:~/Work/pacemk/files$ mkdir ssh_keys  
+    mgarcia@mercury:~/Work/pacemk/files/ssh_keys$ KEYS_DIR=`pwd`
+    mgarcia@mercury:~/Work/pacemk/files/ssh_keys$ ssh-keygen -f ${KEYS_DIR}/id_rsa -q -N ""
+    mgarcia@mercury:~/Work/pacemk/files/ssh_keys$ cp id_rsa.pub authorized_keys
+
+Then on the Ansible playbook they are copied to the `.ssh` directory in the home of the _root_
+
+    - name: Copy ssh config file to root's ssh dir.
+        copy:
+        src: files/ssh_keys/config
+        dest: /root/.ssh/
+        owner: root
+        group: root
+        mode: 0400
+
+Sometimes the service don't start on the cluster. The problem seems to be with the `flik` node.
+
+### Shell commands
+
+The `pcs` commands are executed with the _shell_ module, and they always return as "changed" so maybe it's a good idea to register the variable and print the output.
+
