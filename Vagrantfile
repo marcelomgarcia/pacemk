@@ -5,7 +5,7 @@ Vagrant.configure("2") do |config|
   #Synced folders
   config.vm.synced_folder ".", "/vagrant", type: "rsync",
     rsync__exclude: ".git/"
-   
+    
   # Common configuration for both machines.
   config.vm.box = "centos/7"
   config.vm.provider "virtualbox" do |vv|
