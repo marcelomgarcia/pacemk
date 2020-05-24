@@ -29,7 +29,7 @@ Vagrant.configure("2") do |config|
   # Define the second server.
   config.vm.define "hopper" do |hopper|
     hopper.vm.hostname = "hopper"
-    flik.vm.provider :virtualbox do |vb|
+    hopper.vm.provider :virtualbox do |vb|
         vb.memory = 2024
         vb.cpus = 2
     end
