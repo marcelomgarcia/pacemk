@@ -16,14 +16,24 @@ Vagrant.configure("2") do |config|
   config.vm.provision "shell", inline: "chmod 600 /home/vagrant/.ssh/id_rsa.pub"
   config.vm.provision "shell", inline: "chmod 600 /home/vagrant/.ssh/config"
 
-  # Define the first server. This will be the master of pcs cluster.
+  # Define the first server.
   config.vm.define "flik" do |flik|
     flik.vm.hostname = "flik"
     flik.vm.provider :virtualbox do |vb|
-        vb.memory = 1024
+        vb.memory = 2024
         vb.cpus = 2
     end
     flik.vm.network "private_network", ip: "192.168.50.11"
+  end
+
+  # Define the second server.
+  config.vm.define "hopper" do |hopper|
+    hopper.vm.hostname = "hopper"
+    flik.vm.provider :virtualbox do |vb|
+        vb.memory = 2024
+        vb.cpus = 2
+    end
+    hopper.vm.network "private_network", ip: "192.168.50.12"
   end
 
   config.vm.define "atta", primary: true do |atta|
