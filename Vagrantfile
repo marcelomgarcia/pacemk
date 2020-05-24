@@ -8,32 +8,38 @@ Vagrant.configure("2") do |config|
     
   # Common configuration for both machines.
   config.vm.box = "centos/7"
-  config.vm.provider "virtualbox" do |vv|
-    vv.memory = 2048
-    vv.cpus = 2
-  end
+  config.ssh.insert_key = false
+  config.vm.provision "file", source: "keys/config",  destination: "~/.ssh/config"
+  config.vm.provision "file", source: "keys/vagrant", destination: "~/.ssh/id_rsa"
+  config.vm.provision "file", source: "keys/vagrant.pub", destination: "~/.ssh/id_rsa.pub"
+  config.vm.provision "shell", inline: "chmod 600 /home/vagrant/.ssh/id_rsa"
+  config.vm.provision "shell", inline: "chmod 600 /home/vagrant/.ssh/id_rsa.pub"
+  config.vm.provision "shell", inline: "chmod 600 /home/vagrant/.ssh/config"
 
   # Define the first server. This will be the master of pcs cluster.
-  config.vm.define "flik" do |machine|
-    machine.vm.hostname = "flik"
-    machine.vm.network "private_network", ip: "192.168.50.10"
+  config.vm.define "flik" do |flik|
+    flik.vm.hostname = "flik"
+    flik.vm.provider :virtualbox do |vb|
+        vb.memory = 1024
+        vb.cpus = 2
+    end
+    flik.vm.network "private_network", ip: "192.168.50.11"
   end
 
-  # Define the second server. This will be the slave of pcs cluster.
-  config.vm.define "atta" do |machine|
-    machine.vm.hostname = "atta"
-    machine.vm.network "private_network", ip: "192.168.50.11"
-  end
-
-  # Create a "controller" where we will install Ansible and from where we'll 
-  # install the software of the two other machines.
-  config.vm.define 'hopper', primary: true  do |machine|
-    machine.vm.hostname = "hopper"
-    machine.vm.network "private_network", ip: "192.168.50.13"
-    machine.vm.provision :ansible_local do |ansible|
-      ansible.playbook = "pacemk_pbk.yaml"
-      ansible.limit = "all"
+  config.vm.define "atta", primary: true do |atta|
+    atta.vm.hostname = "atta"
+    atta.vm.network "private_network", ip: "192.168.50.10"
+    atta.vm.network "forwarded_port", guest: 9090, host: 9090
+    atta.vm.provider :virtualbox do |vb|
+        vb.memory = 2048
+        vb.cpus = 2
+    end
+    atta.vm.provision :ansible_local do |ansible|
+      ansible.verbose        = true
+      ansible.install        = true
+      ansible.limit          = "all"
       ansible.inventory_path = "inventory"
+      ansible.playbook       = "pacemk_pbk.yaml"
     end
   end
 end
