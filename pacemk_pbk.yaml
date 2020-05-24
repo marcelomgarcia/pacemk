@@ -11,8 +11,10 @@
     selinux:
       state: disabled
   - name: Extra packages including corosync and pacemaker.
-    action: yum name={{ item }} state=present update_cache=yes
-    with_items: 
+    yum:
+      name="{{ packages }}"
+    vars: 
+      packages:
       - redhat-lsb
       - vim
       - curl 
