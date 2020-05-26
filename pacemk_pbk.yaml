@@ -25,23 +25,6 @@
         - pacemaker 
         - pcs 
         - resource-agents
-  # TODO: create/add lines to /etc/hosts via templates.
-  - name: Add flik to /etc/hosts.
-    lineinfile: 
-      path: /etc/hosts
-      regexp: '^192\.168\.50\.11'
-      line: '192.168.50.10   flik'
-      owner: root
-      group: root
-      mode: 0644
-  - name: Hopper to /etc/hosts
-    lineinfile: 
-      path: /etc/hosts
-      regexp: '^192\.168\.50\.12'
-      line: '192.168.50.11   hopper'
-      owner: root
-      group: root
-      mode: 0644
   # Copy the configuration file.
   - name: Copy 'corosync.conf' file.
     copy:
