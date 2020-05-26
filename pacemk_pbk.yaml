@@ -12,15 +12,8 @@
       state: disabled
   - name: Extra packages including corosync and pacemaker.
     yum:
-      name="{{ packages }}"
-    vars: 
-      packages:
-      - redhat-lsb
-      - vim
-      - curl 
-      - pacemaker 
-      - pcs
-      - resource-agents
+      name: "{{ redhat-lsb  vim curl pacemaker pcs resource-agents }}"
+      state: present
   # TODO: create/add lines to /etc/hosts via templates.
   - name: Add flik to /etc/hosts.
     lineinfile: 
