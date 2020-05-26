@@ -5,4 +5,5 @@ hopper    ansible_ssh_host=192.168.50.12
 
 [nodes]
 atta
+hopper
 flik
