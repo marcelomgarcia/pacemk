@@ -91,9 +91,9 @@
   become_method: sudo
   tasks: 
   - name: Authentication for 'pcs'
-    shell: pcs cluster auth flik atta -u hacluster -p CHANGEME --force
-  - name: Start the cluster on atta
-    shell: pcs cluster start atta
+    shell: pcs cluster auth flik hopper -u hacluster -p CHANGEME --force
+  - name: Start the cluster on hopper
+    shell: pcs cluster start hopper
   - name: Pause for 2 minutes to see if the service starts
     pause:
       minutes: 2
