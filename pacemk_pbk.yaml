@@ -7,14 +7,20 @@
   become_method: sudo
   # Disable selinux
   tasks:
-  - name: disable SElinux.
+  - name: disable SElinux
     selinux:
       state: disabled
+  - name: Copy etc_hosts to all
+    copy:
+      src: files/hosts.txt
+      dest: /etc/hosts
+      owner: root
+      mode: '0644'
 - hosts: nodes
   become: true
   become_method: sudo
   tasks:
-  - name: Extra packages including corosync and pacemaker.
+  - name: Extra packages including corosync and pacemaker
     yum:
       name: "{{ packages }}"
     vars:
@@ -26,7 +32,7 @@
         - pcs 
         - resource-agents
   # Copy the configuration file.
-  - name: Copy 'corosync.conf' file.
+  - name: Copy 'corosync.conf' file
     copy:
       src: files/corosync.conf
       dest: /etc/corosync/
@@ -34,43 +40,43 @@
       group: root
       mode: 0644
   # start the services
-  - name: Start pcsd service.
+  - name: Start pcsd service
     service:
       name: pcsd
       state: started
-  - name: Enable pcsd service. 
+  - name: Enable pcsd service
     service:
       name: pcsd
       enabled: yes
   # Create the '/root/.ssh' directory.
-  - name: Create root's ssh directory.
+  - name: Create root's ssh directory
     file: 
       path: /root/.ssh
       state: directory
       mode: 0700
   # Import 'ssh' keys
-  - name: Copy ssh authorized_keys file.
+  - name: Copy ssh authorized_keys file
     copy:
       src: files/ssh_keys/authorized_keys
       dest: /root/.ssh/
       owner: root
       group: root
       mode: 0644
-  - name: Copy private key.
+  - name: Copy private key
     copy:
       src: files/ssh_keys/id_rsa
       dest: /root/.ssh/
       owner: root
       group: root
       mode: 0600
-  - name: Copy public key.
+  - name: Copy public key
     copy:
       src: files/ssh_keys/id_rsa.pub
       dest: /root/.ssh/
       owner: root
       group: root
       mode: 0644
-  - name: Copy ssh config file to root's ssh dir.
+  - name: Copy ssh config file to root's ssh dir
     copy:
       src: files/ssh_keys/config
       dest: /root/.ssh/
@@ -78,13 +84,13 @@
       group: root
       mode: 0400
   # Authorization for 'pcs'.
-  - name: Pcs authorization.
+  - name: Pcs authorization
     shell: echo CHANGEME | passwd --stdin hacluster
 - hosts: flik
   become: yes
   become_method: sudo
   tasks: 
-  - name: Authentication for 'pcs'.
+  - name: Authentication for 'pcs'
     shell: pcs cluster auth flik atta -u hacluster -p CHANGEME --force
   - name: Start the cluster on atta
     shell: pcs cluster start atta
