@@ -74,15 +74,15 @@ Sometimes the service don't start on the cluster. The problem seems to be with t
 
 #### Windows 10 and Powershell
 
-Windows 10 has its own `ssh` client, and it's necessary to tell Vagrant to use the buid-in client by disabling the Windows ssh:
+Windows 10 has its own `ssh` client, and it's necessary to disable it so Vagrant can use the buid-in client:
 
 ```
 PS C:\Users\mgarcia\Documents\Work\pacemk> vagrant ssh
 vagrant@127.0.0.1: Permission denied (publickey,gssapi-keyex,gssapi-with-mic).
 PS C:\Users\mgarcia\Documents\Work\pacemk>
-PS C:\Users\mgarcia\Documents\Work\pacemk> vagrant ssh
-vagrant@127.0.0.1: Permission denied (publickey,gssapi-keyex,gssapi-with-mic).
-PS C:\Users\mgarcia\Documents\Work\pacemk>
+PS C:\Users\mgarcia\Documents\Work\pacemk\keys> $Env:VAGRANT_PREFER_SYSTEM_BIN += 0
+PS C:\Users\mgarcia\Documents\Work\pacemk\keys> vagrant ssh
+[vagrant@atta ~]$
 ```
 
 ### Shell commands
