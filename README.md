@@ -72,6 +72,19 @@ Then on the Ansible playbook they are copied to the `.ssh` directory in the home
 
 Sometimes the service don't start on the cluster. The problem seems to be with the `flik` node.
 
+#### Windows 10 and Powershell
+
+Windows 10 has its own `ssh` client, and it's necessary to tell Vagrant to use the buid-in client by disabling the Windows ssh:
+
+```
+PS C:\Users\mgarcia\Documents\Work\pacemk> vagrant ssh
+vagrant@127.0.0.1: Permission denied (publickey,gssapi-keyex,gssapi-with-mic).
+PS C:\Users\mgarcia\Documents\Work\pacemk>
+PS C:\Users\mgarcia\Documents\Work\pacemk> vagrant ssh
+vagrant@127.0.0.1: Permission denied (publickey,gssapi-keyex,gssapi-with-mic).
+PS C:\Users\mgarcia\Documents\Work\pacemk>
+```
+
 ### Shell commands
 
 The `pcs` commands are executed with the _shell_ module, and they always return as "changed" so maybe it's a good idea to register the variable and print the output.
