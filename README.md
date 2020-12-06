@@ -85,7 +85,50 @@ PS C:\Users\mgarcia\Documents\Work\pacemk\keys> vagrant ssh
 [vagrant@atta ~]$
 ```
 
-## Shell commands
+## PCS configuration
+
+### Shell commands
 
 The `pcs` commands are executed with the _shell_ module, and they always return as "changed" so maybe it's a good idea to register the variable and print the output.
+
+### Starting the cluster
+
+The service `pacemaker` doesn't start automatically without a STONITH configuration. Since it's a simple test cluster, I will disable STONITH (fencing), and check the configuration of the cluster by printing the _cib_
+
+```
+[root@hopper ~]# pcs property set stonith-enabled=false
+[root@hopper ~]# pcs cluster cib
+(...)
+        <nvpair id="cib-bootstrap-options-stonith-enabled" name="stonith-enabled" value="false"/>
+```
+
+Restart the cluster with new configuration
+
+```
+PS C:\Users\mgarcia\Documents\Work\pacemk> vagrant reload
+```
+
+But _pcs_ was still not working because the services `corosync` and `pacemaker` weren't enabled
+
+```
+[root@hopper ~]# pcs status
+Error: cluster is not currently running on this node
+[root@hopper ~]#
+[root@hopper ~]#  systemctl status corosync
+● corosync.service - Corosync Cluster Engine
+   Loaded: loaded (/usr/lib/systemd/system/corosync.service; disabled; vendor preset: disabled)
+(...)
+[root@hopper ~]# systemctl enable corosync
+[root@hopper ~]# systemctl enable pacemaker
+```
+
+After enabling the services, and restarting the cluster, `pcs` was working
+
+```
+[root@flik ~]# pcs status
+Cluster name: mycluster
+Stack: corosync
+Current DC: flik (version 1.1.23-1.el7-9acf116022) - partition with quorum
+(...)
+```
 
