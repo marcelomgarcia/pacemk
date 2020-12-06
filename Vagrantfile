@@ -16,7 +16,7 @@ Vagrant.configure("2") do |config|
   config.vm.provision "shell", inline: "chmod 600 /home/vagrant/.ssh/id_rsa.pub"
   config.vm.provision "shell", inline: "chmod 600 /home/vagrant/.ssh/config"
 
-  # Define the first server.
+  # Define the first node.
   config.vm.define "flik" do |flik|
     flik.vm.hostname = "flik"
     flik.vm.provider :virtualbox do |vb|
@@ -26,7 +26,7 @@ Vagrant.configure("2") do |config|
     flik.vm.network "private_network", ip: "192.168.50.11"
   end
 
-  # Define the second server.
+  # Define the second node.
   config.vm.define "hopper" do |hopper|
     hopper.vm.hostname = "hopper"
     hopper.vm.provider :virtualbox do |vb|
@@ -36,6 +36,7 @@ Vagrant.configure("2") do |config|
     hopper.vm.network "private_network", ip: "192.168.50.12"
   end
 
+# Define the master node.
   config.vm.define "atta", primary: true do |atta|
     atta.vm.hostname = "atta"
     atta.vm.network "private_network", ip: "192.168.50.10"
