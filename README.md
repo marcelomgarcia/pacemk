@@ -42,8 +42,6 @@ To force the re-sync of the shared folder use `vagrant reload` or `vagrant up`. 
 
 ### Inventory
 
-### Inventory
-
 The easiest way to access the Ansible inventory on the VMs is to simply [export](https://www.vagrantup.com/docs/synced-folders/basic_usage) the `vagrant` folder to the clients. In the `Vagrantfile` we defined the folder to exported (synched)
 
 ```
