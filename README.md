@@ -8,9 +8,9 @@ The `Vagrantfile` defines three VMs: `flik`, `atta`, and `hopper`:
 
     config.vm.define "flik" do |machine|
     (...)
-    config.vm.define "atta" do |machine|
+    config.vm.define "hopper" do |hopper|
     (...)
-    config.vm.define 'hopper', primary: true  do |machine|
+    config.vm.define "atta", primary: true do |atta|
 
 The definition of `hopper` has an extra clausule that defines this machine as the *primary*. That is this will be *default* machine in a multi machine environment. Ansible will be installed on this machine, and it will controll the other two.
 
