@@ -18,7 +18,7 @@ We also define the private address for each machine so they can communicate betw
 
     machine.vm.network "private_network", ip: "192.168.50.10"
     machine.vm.network "private_network", ip: "192.168.50.11"
-    machine.vm.network "private_network", ip: "192.168.50.13"
+    machine.vm.network "private_network", ip: "192.168.50.12"
 
 We test by booting the machines and trying to ping each other:
 
@@ -72,7 +72,7 @@ Then on the Ansible playbook they are copied to the `.ssh` directory in the home
 
 Sometimes the service don't start on the cluster. The problem seems to be with the `flik` node.
 
-#### Windows 10 and Powershell
+## Windows 10 and Powershell
 
 Windows 10 has its own `ssh` client, and it's necessary to disable it so Vagrant can use the buid-in client:
 
@@ -85,7 +85,7 @@ PS C:\Users\mgarcia\Documents\Work\pacemk\keys> vagrant ssh
 [vagrant@atta ~]$
 ```
 
-### Shell commands
+## Shell commands
 
 The `pcs` commands are executed with the _shell_ module, and they always return as "changed" so maybe it's a good idea to register the variable and print the output.
 
