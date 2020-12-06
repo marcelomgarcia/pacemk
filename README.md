@@ -42,14 +42,39 @@ To force the re-sync of the shared folder use `vagrant reload` or `vagrant up`. 
 
 ### Inventory
 
-We define a inventory file with the path to ssh key and host group definition. There is a complication that the default place for machine definition, the `.vagrant` directory, is not exported by default. Therefore is necessary to use other location. In the case of this project, the new folder is exported (as environment variable) before starting vagrant:
+### Inventory
 
-    export VAGRANT_DOTFILE_PATH=${HOME}/Work/pacemk/.vmulti
-    vagrant up
+The easiest way to access the Ansible inventory on the VMs is to simply [export](https://www.vagrantup.com/docs/synced-folders/basic_usage) the `vagrant` folder to the clients. In the `Vagrantfile` we defined the folder to exported (synched)
 
-And on the inventory file we point to the
+```
+  config.vm.synced_folder ".", "/vagrant", type: "rsync",
+```
+here `.` is the folder project, and it will be synced with the folder `/vagrant` on the clients via `rsync` command.
 
-    flik ansib(...)be_ssh_private_key_file=/vagrant/.vmulti/machines/...
+The inventory file defines the clients and their IP address inside the Vagrant environment. We also define a group with the nodes that will compose the PCS cluster. The host `atta` has the option _local_ for the type of connection because it's the controller, and the playbook should run on the node itself.
+
+```
+atta      ansible_ssh_host=192.168.50.10   ansible_connection=local
+flik      ansible_ssh_host=192.168.50.11
+hopper    ansible_ssh_host=192.168.50.12
+
+[nodes]
+hopper
+flik
+```
+
+To use Ansible on the VMs, we have to provide the inventory file to the `ansible` command
+
+```
+[vagrant@atta ~]$ ansible -i /vagrant/inventory -m ping nodes
+hopper | SUCCESS => {
+(...)
+}
+flik | SUCCESS => {
+(...)
+}
+[vagrant@atta ~]$
+```
 
 ### SSH keys
 
