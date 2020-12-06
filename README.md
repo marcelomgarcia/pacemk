@@ -46,18 +46,6 @@ On the Vagrant file we define
 
 The verbosity is set to false otherwise the output becomes polluted with too many messages. The option to install isn't necessary because it's the default. From the controller we provision all (`limit`) all nodes. Finally there are the path to inventory file, and the playbook to use.
 
-One important step is to create a `ansible.cfg` to fully disable SSH host key checking
-
-```
-[defaults]
-host_key_checking = no
-
-[ssh_connection]
-ssh_args = -o ControlMaster=auto -o ControlPersist=60s -o IdentitiesOnly=yes -o StrictHostKeyChecking=no
-```
-
-This file is available to the clients on the `/vagrant` folder.
-
 ### Networking
 
 We also define the private address for each machine so they can communicate between them. The definition is:
@@ -124,7 +112,21 @@ flik | SUCCESS => {
 [vagrant@atta ~]$
 ```
 
-### SSH keys
+### Disable SSH checking
+
+One important step is to create a `ansible.cfg` to fully disable SSH host key checking
+
+```
+[defaults]
+host_key_checking = no
+
+[ssh_connection]
+ssh_args = -o ControlMaster=auto -o ControlPersist=60s -o IdentitiesOnly=yes -o StrictHostKeyChecking=no
+```
+
+This file is available to the clients on the `/vagrant` folder.
+
+## SSH keys
 
 Setting the [ssh keys](https://www.rittmanmead.com/blog/2014/12/linux-cluster-sysadmin-ssh-keys/) for the _root_ user with Ansible module `copy`.
 
