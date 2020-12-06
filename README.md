@@ -11,30 +11,80 @@ The `Vagrantfile` defines three VMs: `flik`, `atta`, and `hopper`:
     config.vm.define "hopper" do |hopper|
     (...)
     config.vm.define "atta", primary: true do |atta|
+    (...)
 
-The definition of `hopper` has an extra clausule that defines this machine as the *primary*. That is this will be *default* machine in a multi machine environment. Ansible will be installed on this machine, and it will controll the other two.
+The definition of `atta` has an extra clausule that defines this machine as the *primary*. That is this will be *default* machine in a multi machine environment. Ansible will be installed on this machine, and it will controll the other two.
+
+### Memory and CPU
+
+On the Vagrant file we specify the CPU and the memory of each node
+
+```
+    flik.vm.provider :virtualbox do |vb|
+        vb.memory = 2048
+        vb.cpus = 2
+    end
+```
+
+And there is a similar definition for _hopper_ and _atta_. In this way each node can have the necessary number of CPUs and amount of memory. In this case _flik_ has 2GB of memory.
+
+### Ansible
+
+We also define Ansible as the provisioning mechanism for configuration. Since Windows can't be an Ansible controller, we will need to define one of the guest machines to be the controller. For this [local](https://www.vagrantup.com/docs/provisioning/ansible_local) installation, we will use the `ansible_local` provisioner.
+
+On the Vagrant file we define
+
+```
+    atta.vm.provision :ansible_local do |ansible|
+      ansible.verbose        = false
+      ansible.install        = true
+      ansible.limit          = "all"
+      ansible.inventory_path = "inventory"
+      ansible.playbook       = "pacemk_pbk.yaml"
+    end
+```
+
+The verbosity is set to false otherwise the output becomes polluted with too many messages. The option to install isn't necessary because it's the default. From the controller we provision all (`limit`) all nodes. Finally there are the path to inventory file, and the playbook to use.
+
+One important step is to create a `ansible.cfg` to fully disable SSH host key checking
+
+```
+[defaults]
+host_key_checking = no
+
+[ssh_connection]
+ssh_args = -o ControlMaster=auto -o ControlPersist=60s -o IdentitiesOnly=yes -o StrictHostKeyChecking=no
+```
+
+This file is available to the clients on the `/vagrant` folder.
+
+### Networking
 
 We also define the private address for each machine so they can communicate between them. The definition is:
 
-    machine.vm.network "private_network", ip: "192.168.50.10"
-    machine.vm.network "private_network", ip: "192.168.50.11"
-    machine.vm.network "private_network", ip: "192.168.50.12"
+    flik.vm.network "private_network", ip: "192.168.50.11"
+    hopper.vm.network "private_network", ip: "192.168.50.12"
+    atta.vm.network "private_network", ip: "192.168.50.10"
 
-We test by booting the machines and trying to ping each other:
+We test by booting the machines and trying to ping the nodes from the controller:
 
-    PS C:\Users\mgarcia\Documents\Work\pacemk> vagrant up
-    (...)
-    PS C:\Users\mgarcia\Documents\Work\pacemk> vagrant ssh flik
-    [vagrant@flik ~]$ ping 192.168.50.11
-    PING 192.168.50.11 (192.168.50.11) 56(84) bytes of data.
-    64 bytes from 192.168.50.11: icmp_seq=1 ttl=64 time=0.885 ms
-    (...)
-    PS C:\Users\mgarcia\Documents\Work\pacemk> vagrant ssh atta
-    (...)
-    [vagrant@atta ~]$ ping 192.168.50.10
-    PING 192.168.50.10 (192.168.50.10) 56(84) bytes of data.
-    64 bytes from 192.168.50.10: icmp_seq=1 ttl=64 time=0.461 ms
-    (...)
+```
+PS C:\Users\mgarcia\Documents\Work\pacemk> vagrant ssh
+Last login: Sun Dec  6 15:42:41 2020 from 10.0.2.2
+[vagrant@atta ~]$ hostname
+atta
+[vagrant@atta ~]$
+[vagrant@atta ~]$ ping -c 3 flik
+PING flik (192.168.50.11) 56(84) bytes of data.
+64 bytes from flik (192.168.50.11): icmp_seq=1 ttl=64 time=0.334 ms
+(...)
+[vagrant@atta ~]$
+[vagrant@atta ~]$ ping -c 3 hopper
+PING hopper (192.168.50.12) 56(84) bytes of data.
+64 bytes from hopper (192.168.50.12): icmp_seq=1 ttl=64 time=0.336 ms
+(...)
+[vagrant@atta ~]$
+```
 
 To force the re-sync of the shared folder use `vagrant reload` or `vagrant up`. The first option, `reload` is in fact a reboot of the virtual machines.
 
